@@ -4,5 +4,8 @@
   "deno.unstable": true,
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "denoland.vscode-deno",
-  "cSpell.words": []
+  "cSpell.words": [
+    "iwset",
+    "wset"
+  ]
 }
