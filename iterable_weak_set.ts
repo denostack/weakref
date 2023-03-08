@@ -9,7 +9,7 @@ export class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
 
   constructor(values?: readonly T[] | null);
   constructor(iterable: Iterable<T>);
-  constructor(iterable: Iterable<T> | readonly T[] | null = null) {
+  constructor(iterable: Iterable<T> | null = null) {
     for (const value of iterable ?? []) {
       this.add(value);
     }

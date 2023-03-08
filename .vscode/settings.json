@@ -6,6 +6,8 @@
   "editor.defaultFormatter": "denoland.vscode-deno",
   "cSpell.words": [
     "iwset",
+    "weakref",
+    "wmap",
     "wset"
   ]
 }

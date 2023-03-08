@@ -1,6 +1,24 @@
 import { assert, assertEquals, assertFalse } from "testing/asserts.ts";
 import { IterableWeakSet } from "./iterable_weak_set.ts";
 
+function* iterate<T>(items: T[]): IterableIterator<T> {
+  for (const item of items) {
+    yield item;
+  }
+}
+
+Deno.test("IterableWeakSet, constructor", () => {
+  assertEquals(new IterableWeakSet().size, 0);
+  assertEquals(new IterableWeakSet(undefined).size, 0);
+  assertEquals(new IterableWeakSet(null).size, 0);
+
+  assertEquals(new IterableWeakSet([]).size, 0);
+  assertEquals(new IterableWeakSet(iterate([])).size, 0);
+
+  assertEquals(new IterableWeakSet([{}]).size, 1);
+  assertEquals(new IterableWeakSet(iterate([{}])).size, 1);
+});
+
 Deno.test("IterableWeakSet, comparison Set, WeakSet", () => {
   const set = new Set();
   const wset = new WeakSet();
