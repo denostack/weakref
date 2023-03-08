@@ -1,0 +1,25 @@
+{
+  "imports": {
+    "dnt/": "https://deno.land/x/dnt@0.33.1/",
+    "fmt/": "https://deno.land/std@0.178.0/fmt/",
+    "testing/": "https://deno.land/std@0.178.0/testing/"
+  },
+  "lint": {
+    "files": {
+      "exclude": [".npm"]
+    }
+  },
+  "fmt": {
+    "files": {
+      "exclude": [".npm"]
+    }
+  },
+  "tasks": {
+    "test": "deno task test:unit && deno task test:lint && deno task test:format && deno task test:types",
+    "test:format": "deno fmt --check",
+    "test:lint": "deno lint",
+    "test:unit": "deno test -A",
+    "test:types": "deno check mod.ts",
+    "build:npm": "deno run --allow-env --allow-read --allow-write --allow-net --allow-run scripts/build_npm.ts"
+  }
+}
