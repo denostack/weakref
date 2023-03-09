@@ -12,3 +12,126 @@
   <a href="https://www.npmjs.com/package/weakref"><img alt="Version" src="https://img.shields.io/npm/v/weakref.svg?style=flat-square&logo=npm" /></a>
   <a href="https://npmcharts.com/compare/weakref?minimal=true"><img alt="Downloads" src="https://img.shields.io/npm/dt/weakref.svg?style=flat-square" /></a>
 </p>
+
+Weak Collection Library for Deno and Node.js.
+
+## Usage
+
+### with Deno
+
+```ts
+import {
+  IterableWeakMap,
+  IterableWeakSet,
+} from "https://deno.land/x/weakref/mod.ts";
+
+const set = new IterableWeakSet();
+const map = new IterableWeakMap();
+```
+
+### with Node.js & Browser
+
+**Install**
+
+```bash
+npm install weakref
+```
+
+```ts
+import { IterableWeakMap, IterableWeakSet } from "weakref";
+```
+
+## Features
+
+### IterableWeakSet
+
+**Interface**
+
+```ts
+class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
+  constructor(values?: readonly T[] | null);
+  constructor(iterable: Iterable<T>);
+}
+```
+
+**Example**
+
+```ts
+const set = new IterableWeakSet();
+
+for (let i = 0; i < 100; i++) {
+  set.add({});
+}
+
+for (const item of set) {
+  console.log(item); // will print 100 items
+}
+
+// after garbage collection, {n} items will be collected
+
+for (const item of set) {
+  console.log(item); // will print (100 - {n}) items
+}
+```
+
+### IterableWeakMap
+
+**Interface**
+
+```ts
+class IterableWeakMap<K extends object, V> implements WeakMap<K, V>, Map<K, V> {
+  constructor(entries?: readonly (readonly [K, V])[] | null);
+  constructor(iterable: Iterable<readonly [K, V]>);
+}
+```
+
+**Example**
+
+```ts
+const map = new IterableWeakMap();
+
+for (let i = 0; i < 100; i++) {
+  map.set({}, i);
+}
+
+for (const [key, value] of map) {
+  console.log(key, value); // will print 100 items
+}
+
+// after garbage collection, {n} items will be collected
+
+for (const [key, value] of map) {
+  console.log(key, value); // will print (100 - {n}) items
+}
+```
+
+### InvertedWeakMap
+
+**Interface**
+
+```ts
+class InvertedWeakMap<K, V extends object> implements Map<K, V> {
+  constructor(entries?: readonly (readonly [K, V])[] | null);
+  constructor(iterable: Iterable<readonly [K, V]>);
+}
+```
+
+**Example**
+
+```ts
+const map = new InvertedWeakMap();
+
+for (let i = 0; i < 100; i++) {
+  map.set(i, {});
+}
+
+for (const [key, value] of map) {
+  console.log(key, value); // will print 100 items
+}
+
+// after garbage collection, {n} items will be collected
+
+for (const [key, value] of map) {
+  console.log(key, value); // will print (100 - {n}) items
+}
+```
