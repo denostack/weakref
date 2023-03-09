@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertFalse } from "testing/asserts.ts";
-import { IterableWeakMap } from "./iterable_weak_map.ts";
+import { InvertedWeakMap } from "./inverted_weak_map.ts";
 
 function* iterate<T>(items: T[]): IterableIterator<T> {
   for (const item of items) {
@@ -7,118 +7,101 @@ function* iterate<T>(items: T[]): IterableIterator<T> {
   }
 }
 
-Deno.test("IterableWeakMap, constructor", () => {
-  assertEquals(new IterableWeakMap().size, 0);
-  assertEquals(new IterableWeakMap(undefined).size, 0);
-  assertEquals(new IterableWeakMap(null).size, 0);
+Deno.test("InvertedWeakMap, constructor", () => {
+  assertEquals(new InvertedWeakMap().size, 0);
+  assertEquals(new InvertedWeakMap(undefined).size, 0);
+  assertEquals(new InvertedWeakMap(null).size, 0);
 
-  assertEquals(new IterableWeakMap([]).size, 0);
-  assertEquals(new IterableWeakMap(iterate([])).size, 0);
+  assertEquals(new InvertedWeakMap([]).size, 0);
+  assertEquals(new InvertedWeakMap(iterate([])).size, 0);
 
-  assertEquals(new IterableWeakMap([[{}, 1]]).size, 1);
-  assertEquals(new IterableWeakMap(iterate([[{}, 1] as const])).size, 1);
+  assertEquals(new InvertedWeakMap([[1, {}]]).size, 1);
+  assertEquals(new InvertedWeakMap(iterate([[1, {}] as const])).size, 1);
 });
 
-Deno.test("IterableWeakMap, comparison Map, WeakMap", () => {
+Deno.test("InvertedWeakMap, comparison Map, WeakMap", () => {
   const map = new Map();
-  const wmap = new WeakMap();
-  const iwmap = new IterableWeakMap();
+  const iwmap = new InvertedWeakMap();
 
   assertEquals(map.size, 0);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 0);
 
   const obj1 = {};
   const obj2 = {};
 
-  assertEquals(map.get(obj1), undefined);
-  assertEquals(wmap.get(obj1), undefined);
-  assertEquals(iwmap.get(obj1), undefined);
+  assertEquals(map.get("1"), undefined);
+  assertEquals(iwmap.get("1"), undefined);
 
-  assertEquals(map.set(obj1, "1"), map);
-  assertEquals(wmap.set(obj1, "1"), wmap);
-  assertEquals(iwmap.set(obj1, "1"), iwmap);
+  assertEquals(map.set("1", obj1), map);
+  assertEquals(iwmap.set("1", obj1), iwmap);
 
-  assertEquals(map.get(obj1), "1");
-  assertEquals(wmap.get(obj1), "1");
-  assertEquals(iwmap.get(obj1), "1");
+  assertEquals(map.get("1"), obj1);
+  assertEquals(iwmap.get("1"), obj1);
 
   assertEquals(map.size, 1);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 1);
 
   // add the same object again
-  assertEquals(map.set(obj1, "2"), map);
-  assertEquals(wmap.set(obj1, "2"), wmap);
-  assertEquals(iwmap.set(obj1, "2"), iwmap);
+  assertEquals(map.set("1", obj2), map);
+  assertEquals(iwmap.set("1", obj2), iwmap);
 
-  assertEquals(map.get(obj1), "2");
-  assertEquals(wmap.get(obj1), "2");
-  assertEquals(iwmap.get(obj1), "2");
+  assertEquals(map.get("1"), obj2);
+  assertEquals(iwmap.get("1"), obj2);
 
   assertEquals(map.size, 1);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 1);
 
-  assertEquals(map.set(obj2, true), map);
-  assertEquals(wmap.set(obj2, true), wmap);
-  assertEquals(iwmap.set(obj2, true), iwmap);
+  assertEquals(map.set(2, obj1), map);
+  assertEquals(iwmap.set(2, obj1), iwmap);
 
   assertEquals(map.size, 2);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 2);
 
-  assert(map.has(obj1));
-  assert(wmap.has(obj1));
-  assert(iwmap.has(obj1));
+  assert(map.has(2));
+  assert(iwmap.has(2));
 
   // delete the object
-  assert(map.delete(obj1));
-  assert(wmap.delete(obj1));
-  assert(iwmap.delete(obj1));
+  assert(map.delete("1"));
+  assert(iwmap.delete("1"));
 
   assertEquals(map.size, 1);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 1);
 
-  assertFalse(map.delete(obj1));
-  assertFalse(wmap.delete(obj1));
-  assertFalse(iwmap.delete(obj1));
+  assertFalse(map.delete("1"));
+  assertFalse(iwmap.delete("1"));
 
   assertEquals(map.size, 1);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 1);
 
-  assertFalse(map.has(obj1));
-  assertFalse(wmap.has(obj1));
-  assertFalse(iwmap.has(obj1));
+  assertFalse(map.has("1"));
+  assertFalse(iwmap.has("1"));
 
-  assertEquals(map.get(obj1), undefined);
-  assertEquals(wmap.get(obj1), undefined);
-  assertEquals(iwmap.get(obj1), undefined);
+  assertEquals(map.get("1"), undefined);
+  assertEquals(iwmap.get("1"), undefined);
 
   assertFalse(map.clear());
-  // assertFalse(wmap.clear());
   assertFalse(iwmap.clear());
 
   assertEquals(map.size, 0);
-  // assertEquals(wmap.size, 0);
   assertEquals(iwmap.size, 0);
 
   assertEquals(map.toString(), "[object Map]");
-  assertEquals(wmap.toString(), "[object WeakMap]");
-  assertEquals(iwmap.toString(), "[object IterableWeakMap]");
+  assertEquals(iwmap.toString(), "[object InvertedWeakMap]");
 });
 
-Deno.test("IterableWeakMap, iterable", () => {
-  const tuples: [Record<string, unknown>, number][] = [[{}, 1], [{}, 2], [
-    {},
-    3,
-  ]];
+Deno.test("InvertedWeakMap, iterable", () => {
+  const tuples: [number | string | boolean, Record<string, unknown>][] = [
+    [1, {}],
+    ["2", {}],
+    [
+      false,
+      {},
+    ],
+  ];
 
   const maps = [
     new Map(tuples),
-    new IterableWeakMap(tuples),
+    new InvertedWeakMap(tuples),
   ];
 
   for (const map of maps) {
@@ -179,18 +162,18 @@ Deno.test("IterableWeakMap, iterable", () => {
   }
 });
 
-Deno.test("IterableWeakMap, garbage collect", async () => {
+Deno.test("InvertedWeakMap, garbage collect", async () => {
   let removedCount = 0;
   let insertedCount = 0;
   const register = new FinalizationRegistry(() => {
     removedCount++;
   });
 
-  const map = new IterableWeakMap();
+  const map = new InvertedWeakMap();
   for (let i = 0; removedCount < 100; i++) {
     await new Promise((resolve) => setTimeout(resolve, 16));
     const data = {};
-    map.set(data, i);
+    map.set(i, data);
     register.register(data, i);
     insertedCount++;
   }
