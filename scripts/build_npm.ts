@@ -21,6 +21,9 @@ await build({
   compilerOptions: {
     lib: ["es2022"],
   },
+  shims: {
+    deno: false,
+  },
   package: {
     name: "weakref",
     version,
