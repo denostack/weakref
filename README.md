@@ -13,7 +13,10 @@
   <a href="https://npmcharts.com/compare/weakref?minimal=true"><img alt="Downloads" src="https://img.shields.io/npm/dt/weakref.svg?style=flat-square" /></a>
 </p>
 
-Weak Collection Library for Deno and Node.js.
+This library provides three iterable weak data structures for JavaScript,
+IterableWeakSet, IterableWeakMap, and InvertedWeakMap. These data structures are
+designed to work with objects as keys or values, and are useful when you need to
+store a collection of objects that may be garbage collected.
 
 ## Usage
 
@@ -21,12 +24,14 @@ Weak Collection Library for Deno and Node.js.
 
 ```ts
 import {
+  InvertedWeakMap,
   IterableWeakMap,
   IterableWeakSet,
 } from "https://deno.land/x/weakref/mod.ts";
 
 const set = new IterableWeakSet();
 const map = new IterableWeakMap();
+const invertedMap = new InvertedWeakMap();
 ```
 
 ### with Node.js & Browser
@@ -45,6 +50,11 @@ import { IterableWeakMap, IterableWeakSet } from "weakref";
 
 ### IterableWeakSet
 
+IterableWeakSet is a class that extends the WeakSet and Set classes in
+JavaScript, allowing you to create a set of objects that can be iterated over.
+Objects in the set are stored using weak references, which means that they can
+be garbage collected if they are no longer referenced elsewhere in the program.
+
 **Interface**
 
 ```ts
@@ -59,22 +69,28 @@ class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
 ```ts
 const set = new IterableWeakSet();
 
-for (let i = 0; i < 100; i++) {
-  set.add({});
+// create an object with a weak reference
+{
+  const user = { id: 1, email: "hey@wan2.land" };
+  set.add(user);
+}
+// end of scope, user will be garbage collected
+
+// force garbage collection
+if (global.gc) {
+  global.gc();
 }
 
-for (const item of set) {
-  console.log(item); // will print 100 items
-}
-
-// after garbage collection, {n} items will be collected
-
-for (const item of set) {
-  console.log(item); // will print (100 - {n}) items
-}
+// check the set size
+console.log(set.size); // output: 0
 ```
 
 ### IterableWeakMap
+
+IterableWeakMap is a class that extends the WeakMap and Map classes in
+JavaScript, allowing you to create a map of objects that can be iterated over.
+Keys in the map are stored using weak references, which means that they can be
+garbage collected if they are no longer referenced elsewhere in the program.
 
 **Interface**
 
@@ -90,22 +106,29 @@ class IterableWeakMap<K extends object, V> implements WeakMap<K, V>, Map<K, V> {
 ```ts
 const map = new IterableWeakMap();
 
-for (let i = 0; i < 100; i++) {
-  map.set({}, i);
+// create an object with a weak reference
+{
+  const user = { id: 1, email: "hey@wan2.land" };
+  const metadata = { created: new Date() };
+  map.set(user, metadata);
+}
+// end of scope, user will be garbage collected
+
+// force garbage collection
+if (global.gc) {
+  global.gc();
 }
 
-for (const [key, value] of map) {
-  console.log(key, value); // will print 100 items
-}
-
-// after garbage collection, {n} items will be collected
-
-for (const [key, value] of map) {
-  console.log(key, value); // will print (100 - {n}) items
-}
+// check the map size
+console.log(map.size); // output: 0
 ```
 
 ### InvertedWeakMap
+
+InvertedWeakMap is a class that allows you to create a map of non-object keys
+with weak references to object values. This is useful when you have a collection
+of non-object keys that you want to use to look up objects, and those objects
+may be garbage collected.
 
 **Interface**
 
@@ -121,17 +144,18 @@ class InvertedWeakMap<K, V extends object> implements Map<K, V> {
 ```ts
 const map = new InvertedWeakMap();
 
-for (let i = 0; i < 100; i++) {
-  map.set(i, {});
+// create an object with a weak reference
+{
+  const user = { id: 1, email: "hey@wan2.land" };
+  map.set(user.id, user);
+}
+// end of scope, user will be garbage collected
+
+// force garbage collection
+if (global.gc) {
+  global.gc();
 }
 
-for (const [key, value] of map) {
-  console.log(key, value); // will print 100 items
-}
-
-// after garbage collection, {n} items will be collected
-
-for (const [key, value] of map) {
-  console.log(key, value); // will print (100 - {n}) items
-}
+// check the map size
+console.log(map.size); // output: 0
 ```

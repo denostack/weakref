@@ -25,13 +25,14 @@ await build({
     name: "weakref",
     version,
     description:
-      "Weak Collection Library for Deno and Node.js. It provides IterableWeakSet, IterableWeakMap, and InvertedWeakMap.",
+      "Extend built-in collections with weak references for efficient garbage collection and optimal performance in memory-intensive applications with IterableWeakSet, IterableWeakMap, and InvertedWeakMap.",
     keywords: [
       "weakref",
       "weakset",
       "weakmap",
       "weak",
       "iterable",
+      "weak references",
     ],
     license: "MIT",
     repository: {
