@@ -160,3 +160,12 @@ if (global.gc) {
 // check the map size
 console.log(map.size); // output: 0
 ```
+
+## See Also
+
+- [Python weakref](https://docs.python.org/3/library/weakref.html) my library is
+  inspired by this library.
+- [MDN - JS WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
+- [MDN - JS WeakSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet)
+- [MDN - JS WeakRef](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef)
+- [MDN - JS FinalizationRegistry](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/FinalizationRegistry)
