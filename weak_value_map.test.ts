@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertFalse } from "testing/asserts.ts";
-import { InvertedWeakMap } from "./inverted_weak_map.ts";
+import { WeakValueMap } from "./weak_value_map.ts";
 
 function* iterate<T>(items: T[]): IterableIterator<T> {
   for (const item of items) {
@@ -7,21 +7,21 @@ function* iterate<T>(items: T[]): IterableIterator<T> {
   }
 }
 
-Deno.test("InvertedWeakMap, constructor", () => {
-  assertEquals(new InvertedWeakMap().size, 0);
-  assertEquals(new InvertedWeakMap(undefined).size, 0);
-  assertEquals(new InvertedWeakMap(null).size, 0);
+Deno.test("WeakValueMap, constructor", () => {
+  assertEquals(new WeakValueMap().size, 0);
+  assertEquals(new WeakValueMap(undefined).size, 0);
+  assertEquals(new WeakValueMap(null).size, 0);
 
-  assertEquals(new InvertedWeakMap([]).size, 0);
-  assertEquals(new InvertedWeakMap(iterate([])).size, 0);
+  assertEquals(new WeakValueMap([]).size, 0);
+  assertEquals(new WeakValueMap(iterate([])).size, 0);
 
-  assertEquals(new InvertedWeakMap([[1, {}]]).size, 1);
-  assertEquals(new InvertedWeakMap(iterate([[1, {}] as const])).size, 1);
+  assertEquals(new WeakValueMap([[1, {}]]).size, 1);
+  assertEquals(new WeakValueMap(iterate([[1, {}] as const])).size, 1);
 });
 
-Deno.test("InvertedWeakMap, comparison Map, WeakMap", () => {
+Deno.test("WeakValueMap, comparison Map, WeakMap", () => {
   const map = new Map();
-  const iwmap = new InvertedWeakMap();
+  const iwmap = new WeakValueMap();
 
   assertEquals(map.size, 0);
   assertEquals(iwmap.size, 0);
@@ -86,10 +86,10 @@ Deno.test("InvertedWeakMap, comparison Map, WeakMap", () => {
   assertEquals(iwmap.size, 0);
 
   assertEquals(map.toString(), "[object Map]");
-  assertEquals(iwmap.toString(), "[object InvertedWeakMap]");
+  assertEquals(iwmap.toString(), "[object WeakValueMap]");
 });
 
-Deno.test("InvertedWeakMap, iterable", () => {
+Deno.test("WeakValueMap, iterable", () => {
   const tuples: [number | string | boolean, Record<string, unknown>][] = [
     [1, {}],
     ["2", {}],
@@ -101,7 +101,7 @@ Deno.test("InvertedWeakMap, iterable", () => {
 
   const maps = [
     new Map(tuples),
-    new InvertedWeakMap(tuples),
+    new WeakValueMap(tuples),
   ];
 
   for (const map of maps) {
@@ -162,14 +162,14 @@ Deno.test("InvertedWeakMap, iterable", () => {
   }
 });
 
-Deno.test("InvertedWeakMap, garbage collect", async () => {
+Deno.test("WeakValueMap, garbage collect", async () => {
   let removedCount = 0;
   let insertedCount = 0;
   const register = new FinalizationRegistry(() => {
     removedCount++;
   });
 
-  const map = new InvertedWeakMap();
+  const map = new WeakValueMap();
   for (let i = 0; removedCount < 100; i++) {
     await new Promise((resolve) => setTimeout(resolve, 16));
     const data = {};

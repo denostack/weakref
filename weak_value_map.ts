@@ -1,6 +1,6 @@
 // deno-lint-ignore-file ban-types
 
-export class InvertedWeakMap<K, V extends object> implements Map<K, V> {
+export class WeakValueMap<K, V extends object> implements Map<K, V> {
   #map = new Map<K, WeakRef<V>>();
   #registry = new FinalizationRegistry<K>(this.#map.delete.bind(this.#map));
 
@@ -48,7 +48,7 @@ export class InvertedWeakMap<K, V extends object> implements Map<K, V> {
   }
 
   get [Symbol.toStringTag]() {
-    return "InvertedWeakMap";
+    return "WeakValueMap";
   }
 
   forEach(

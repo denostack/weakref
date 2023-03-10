@@ -14,7 +14,7 @@
 </p>
 
 This library provides three iterable weak data structures for JavaScript,
-IterableWeakSet, IterableWeakMap, and InvertedWeakMap. These data structures are
+IterableWeakSet, IterableWeakMap, and WeakValueMap. These data structures are
 designed to work with objects as keys or values, and are useful when you need to
 store a collection of objects that may be garbage collected.
 
@@ -24,14 +24,15 @@ store a collection of objects that may be garbage collected.
 
 ```ts
 import {
-  InvertedWeakMap,
   IterableWeakMap,
   IterableWeakSet,
+  WeakValueMap,
 } from "https://deno.land/x/weakref/mod.ts";
 
 const set = new IterableWeakSet();
 const map = new IterableWeakMap();
-const invertedMap = new InvertedWeakMap();
+
+const weakValueMap = new WeakValueMap();
 ```
 
 ### with Node.js & Browser
@@ -123,17 +124,17 @@ if (global.gc) {
 console.log(map.size); // output: 0
 ```
 
-### InvertedWeakMap
+### WeakValueMap
 
-InvertedWeakMap is a class that allows you to create a map of non-object keys
-with weak references to object values. This is useful when you have a collection
-of non-object keys that you want to use to look up objects, and those objects
-may be garbage collected.
+WeakValueMap is a class that allows you to create a map of non-object keys with
+weak references to object values. This is useful when you have a collection of
+non-object keys that you want to use to look up objects, and those objects may
+be garbage collected.
 
 **Interface**
 
 ```ts
-class InvertedWeakMap<K, V extends object> implements Map<K, V> {
+class WeakValueMap<K, V extends object> implements Map<K, V> {
   constructor(entries?: readonly (readonly [K, V])[] | null);
   constructor(iterable: Iterable<readonly [K, V]>);
 }
@@ -142,7 +143,7 @@ class InvertedWeakMap<K, V extends object> implements Map<K, V> {
 **Example**
 
 ```ts
-const map = new InvertedWeakMap();
+const map = new WeakValueMap();
 
 // create an object with a weak reference
 {
