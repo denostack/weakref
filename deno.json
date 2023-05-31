@@ -1,4 +1,5 @@
 {
+  "version": "0.2.0",
   "imports": {
     "dnt/": "https://deno.land/x/dnt@0.33.1/",
     "fmt/": "https://deno.land/std@0.178.0/fmt/",
