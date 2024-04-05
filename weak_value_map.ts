@@ -1,5 +1,3 @@
-// deno-lint-ignore-file ban-types
-
 export class WeakValueMap<K, V extends object> implements Map<K, V> {
   #map = new Map<K, WeakRef<V>>();
   #registry = new FinalizationRegistry<K>(this.#map.delete.bind(this.#map));
@@ -47,7 +45,7 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
     return this;
   }
 
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return "WeakValueMap";
   }
 

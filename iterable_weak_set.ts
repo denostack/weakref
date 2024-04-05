@@ -1,5 +1,3 @@
-// deno-lint-ignore-file ban-types
-
 export class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
   #weakMap = new WeakMap<T, WeakRef<T>>();
   #set = new Set<WeakRef<T>>();
@@ -60,7 +58,7 @@ export class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
     }
   }
 
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return "IterableWeakSet";
   }
 

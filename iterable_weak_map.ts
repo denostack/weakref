@@ -1,5 +1,3 @@
-// deno-lint-ignore-file ban-types
-
 import { IterableWeakSet } from "./iterable_weak_set.ts";
 
 export class IterableWeakMap<K extends object, V>
@@ -49,7 +47,7 @@ export class IterableWeakMap<K extends object, V>
     return this;
   }
 
-  get [Symbol.toStringTag]() {
+  get [Symbol.toStringTag](): string {
     return "IterableWeakMap";
   }
 
