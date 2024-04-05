@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertFalse } from "testing/asserts.ts";
+import { assert, assertEquals, assertFalse } from "@std/assert";
 import { IterableWeakMap } from "./iterable_weak_map.ts";
 
 function* iterate<T>(items: T[]): IterableIterator<T> {

@@ -1,5 +1,5 @@
-import { build, emptyDir } from "dnt/mod.ts";
-import { bgGreen } from "fmt/colors.ts";
+import { build, emptyDir } from "@deno/dnt";
+import { bgGreen } from "@std/fmt/colors";
 
 const denoInfo = JSON.parse(
   Deno.readTextFileSync(new URL("../deno.json", import.meta.url)),
@@ -17,7 +17,7 @@ await build({
   outDir: "./.npm",
   test: false,
   compilerOptions: {
-    lib: ["es2022"],
+    lib: ["ES2022"],
   },
   shims: {
     deno: false,
