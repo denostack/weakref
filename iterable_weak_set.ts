@@ -1,4 +1,17 @@
-export class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
+export class IterableWeakSet<T extends object> implements
+  WeakSet<T>,
+  Omit<
+    Set<T>,
+    | "add" // override to return this
+    | "forEach" // override to call callbackfn with IterableWeakSet
+    | "union" // not implemented
+    | "intersection" // not implemented
+    | "difference" // not implemented
+    | "symmetricDifference" // not implemented
+    | "isSubsetOf" // not implemented
+    | "isSupersetOf" // not implemented
+    | "isDisjointFrom" // not implemented
+  > {
   #weakMap = new WeakMap<T, WeakRef<T>>();
   #set = new Set<WeakRef<T>>();
   #registry = new FinalizationRegistry<WeakRef<T>>(
@@ -50,7 +63,7 @@ export class IterableWeakSet<T extends object> implements WeakSet<T>, Set<T> {
   }
 
   forEach(
-    callbackfn: (value: T, value2: T, set: Set<T>) => void,
+    callbackfn: (value: T, value2: T, set: IterableWeakSet<T>) => void,
     thisArg?: unknown,
   ): void {
     for (const tuple of this.entries()) {
