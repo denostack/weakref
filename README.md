@@ -6,8 +6,9 @@
   <img alt="License" src="https://img.shields.io/npm/l/weakref.svg?style=flat-square" />
   <img alt="Language Typescript" src="https://img.shields.io/badge/language-Typescript-007acc.svg?style=flat-square" />
   <br />
-  <a href="https://deno.land/x/weakref"><img alt="deno.land/x/weakref" src="https://img.shields.io/badge/dynamic/json?url=https://api.github.com/repos/denostack/weakref/tags&query=$[0].name&display_name=tag&label=deno.land/x/weakref@&style=flat-square&logo=deno&labelColor=000&color=777" /></a>
-  <a href="https://www.npmjs.com/package/weakref"><img alt="Version" src="https://img.shields.io/npm/v/weakref.svg?style=flat-square&logo=npm" /></a>
+<a href="https://jsr.io/@denostack/weakref"><img alt="JSR version" src="https://jsr.io/badges/@denostack/weakref?style=flat-square" /></a>
+  <a href="https://deno.land/x/weakref"><img alt="Deno version" src="https://deno.land/badge/weakref/version?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/weakref"><img alt="NPM Version" src="https://img.shields.io/npm/v/weakref.svg?style=flat-square&logo=npm" /></a>
   <a href="https://npmcharts.com/compare/weakref?minimal=true"><img alt="Downloads" src="https://img.shields.io/npm/dt/weakref.svg?style=flat-square" /></a>
 </p>
 
@@ -25,7 +26,7 @@ import {
   IterableWeakMap,
   IterableWeakSet,
   WeakValueMap,
-} from "https://deno.land/x/weakref/mod.ts";
+} from "@denostack/weakref";
 
 const set = new IterableWeakSet();
 const map = new IterableWeakMap();
