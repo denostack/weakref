@@ -47,8 +47,10 @@ import { IterableWeakMap, IterableWeakSet, WeakValueMap } from "weakref";
 ```
 
 > [!NOTE]
-> Examples below call `globalThis.gc?.()`. Manual GC is only available when the
-> runtime exposes it (e.g. Node.js started with `--expose-gc`).
+> Examples below call `globalThis.gc?.()` only to symbolize “a GC cycle just
+> finished”. Manual GC is available only when the runtime exposes it (e.g.
+> Node.js started with `--expose-gc`); otherwise entries disappear the next time
+> the runtime notifies the `FinalizationRegistry`.
 
 ## Features
 
@@ -80,8 +82,8 @@ const set = new IterableWeakSet();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection (Node needs --expose-gc)
-globalThis.gc?.();
+// ...later, after a GC cycle (optional manual trigger shown here)
+globalThis.gc?.(); // Node needs --expose-gc
 
 // check the set size
 console.log(set.size); // output: 0
@@ -115,8 +117,8 @@ const map = new IterableWeakMap();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection (Node needs --expose-gc)
-globalThis.gc?.();
+// ...later, after a GC cycle (optional manual trigger shown here)
+globalThis.gc?.(); // Node needs --expose-gc
 
 // check the map size
 console.log(map.size); // output: 0
@@ -150,8 +152,8 @@ const map = new WeakValueMap();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection (Node needs --expose-gc)
-globalThis.gc?.();
+// ...later, after a GC cycle (optional manual trigger shown here)
+globalThis.gc?.(); // Node needs --expose-gc
 
 // check the map size
 console.log(map.size); // output: 0
