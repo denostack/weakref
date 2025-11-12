@@ -60,21 +60,21 @@ export class IterableWeakMap<K extends object, V>
     }
   }
 
-  *[Symbol.iterator](): IterableIterator<[K, V]> {
+  *[Symbol.iterator](): MapIterator<[K, V]> {
     for (const key of this.#set) {
       yield [key, this.#weakMap.get(key)!];
     }
   }
 
-  entries(): IterableIterator<[K, V]> {
+  entries(): MapIterator<[K, V]> {
     return this[Symbol.iterator]();
   }
 
-  keys(): IterableIterator<K> {
+  keys(): MapIterator<K> {
     return this.#set[Symbol.iterator]();
   }
 
-  *values(): IterableIterator<V> {
+  *values(): MapIterator<V> {
     for (const key of this.#set) {
       yield this.#weakMap.get(key)!;
     }

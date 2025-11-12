@@ -13,9 +13,9 @@
 </p>
 
 This library provides three iterable weak data structures for JavaScript,
-IterableWeakSet, IterableWeakMap, and WeakValueMap. These data structures are
-designed to work with objects as keys or values, and are useful when you need to
-store a collection of objects that may be garbage collected.
+IterableWeakSet, IterableWeakMap, and WeakValueMap. They keep only weak
+references to their keys or values, so entries disappear automatically once the
+referenced objects are garbage collected instead of blocking GC.
 
 ## Usage
 
@@ -43,17 +43,21 @@ npm install weakref
 ```
 
 ```ts
-import { IterableWeakMap, IterableWeakSet } from "weakref";
+import { IterableWeakMap, IterableWeakSet, WeakValueMap } from "weakref";
 ```
+
+> [!NOTE]
+> Examples below call `globalThis.gc?.()`. Manual GC is only available when the
+> runtime exposes it (e.g. Node.js started with `--expose-gc`).
 
 ## Features
 
 ### IterableWeakSet
 
-IterableWeakSet is a class that extends the WeakSet and Set classes in
-JavaScript, allowing you to create a set of objects that can be iterated over.
-Objects in the set are stored using weak references, which means that they can
-be garbage collected if they are no longer referenced elsewhere in the program.
+IterableWeakSet implements the semantics of both WeakSet (weak keys) and Set
+(iteration helpers) so you can keep a deduplicated collection of objects without
+preventing them from being garbage collected. Once an object is collected, the
+entry is removed automatically.
 
 **Interface**
 
@@ -76,10 +80,8 @@ const set = new IterableWeakSet();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection
-if (global.gc) {
-  global.gc();
-}
+// force garbage collection (Node needs --expose-gc)
+globalThis.gc?.();
 
 // check the set size
 console.log(set.size); // output: 0
@@ -87,10 +89,9 @@ console.log(set.size); // output: 0
 
 ### IterableWeakMap
 
-IterableWeakMap is a class that extends the WeakMap and Map classes in
-JavaScript, allowing you to create a map of objects that can be iterated over.
-Keys in the map are stored using weak references, which means that they can be
-garbage collected if they are no longer referenced elsewhere in the program.
+IterableWeakMap combines a WeakMap with iterable Map helpers so you can inspect
+entries without blocking GC. Keys are weakly referenced and disappear once they
+are no longer referenced elsewhere.
 
 **Interface**
 
@@ -114,10 +115,8 @@ const map = new IterableWeakMap();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection
-if (global.gc) {
-  global.gc();
-}
+// force garbage collection (Node needs --expose-gc)
+globalThis.gc?.();
 
 // check the map size
 console.log(map.size); // output: 0
@@ -126,9 +125,9 @@ console.log(map.size); // output: 0
 ### WeakValueMap
 
 WeakValueMap is a class that allows you to create a map of non-object keys with
-weak references to object values. This is useful when you have a collection of
-non-object keys that you want to use to look up objects, and those objects may
-be garbage collected.
+weak references to object values. It is useful when primitive identifiers are
+used to look up objects that should be collected when no longer referenced
+elsewhere.
 
 **Interface**
 
@@ -151,19 +150,22 @@ const map = new WeakValueMap();
 }
 // end of scope, user will be garbage collected
 
-// force garbage collection
-if (global.gc) {
-  global.gc();
-}
+// force garbage collection (Node needs --expose-gc)
+globalThis.gc?.();
 
 // check the map size
 console.log(map.size); // output: 0
 ```
 
+> [!TIP]
+> WeakValueMap relies on the host's `FinalizationRegistry`, so `size`/`has`
+> shrink as soon as the GC notifies the registry. There can be a short delay
+> between the object being collected and the entry disappearing.
+
 ## See Also
 
-- [Python weakref](https://docs.python.org/3/library/weakref.html) my library is
-  inspired by this library.
+- [Python weakref](https://docs.python.org/3/library/weakref.html) inspired this
+  project.
 - [MDN - JS WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
 - [MDN - JS WeakSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet)
 - [MDN - JS WeakRef](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef)

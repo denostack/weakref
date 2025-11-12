@@ -75,24 +75,24 @@ export class IterableWeakSet<T extends object> implements
     return "IterableWeakSet";
   }
 
-  *[Symbol.iterator](): IterableIterator<T> {
+  *[Symbol.iterator](): SetIterator<T> {
     for (const ref of this.#set) {
       yield ref.deref()!;
     }
   }
 
-  *entries(): IterableIterator<[T, T]> {
+  *entries(): SetIterator<[T, T]> {
     for (const ref of this.#set) {
       const value = ref.deref()!;
       yield [value, value];
     }
   }
 
-  keys(): IterableIterator<T> {
+  keys(): SetIterator<T> {
     return this[Symbol.iterator]();
   }
 
-  values(): IterableIterator<T> {
+  values(): SetIterator<T> {
     return this[Symbol.iterator]();
   }
 }

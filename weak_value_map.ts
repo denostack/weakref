@@ -58,21 +58,21 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
     }
   }
 
-  *[Symbol.iterator](): IterableIterator<[K, V]> {
+  *[Symbol.iterator](): MapIterator<[K, V]> {
     for (const [key, ref] of this.#map) {
       yield [key, ref.deref()!];
     }
   }
 
-  entries(): IterableIterator<[K, V]> {
+  entries(): MapIterator<[K, V]> {
     return this[Symbol.iterator]();
   }
 
-  keys(): IterableIterator<K> {
+  keys(): MapIterator<K> {
     return this.#map.keys();
   }
 
-  *values(): IterableIterator<V> {
+  *values(): MapIterator<V> {
     for (const ref of this.#map.values()) {
       yield ref.deref()!;
     }
