@@ -27,7 +27,7 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          slug: denostack/intlit
+          slug: denostack/weakref
           files: ./coverage.lcov
       - name: Build Module
         run: deno task build:npm

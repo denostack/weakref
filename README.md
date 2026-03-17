@@ -6,8 +6,7 @@
   <img alt="License" src="https://img.shields.io/npm/l/weakref.svg?style=flat-square" />
   <img alt="Language Typescript" src="https://img.shields.io/badge/language-Typescript-007acc.svg?style=flat-square" />
   <br />
-<a href="https://jsr.io/@denostack/weakref"><img alt="JSR version" src="https://jsr.io/badges/@denostack/weakref?style=flat-square" /></a>
-  <a href="https://deno.land/x/weakref"><img alt="Deno version" src="https://deno.land/badge/weakref/version?style=flat-square" /></a>
+  <a href="https://jsr.io/@denostack/weakref"><img alt="JSR version" src="https://jsr.io/badges/@denostack/weakref?style=flat-square" /></a>
   <a href="https://www.npmjs.com/package/weakref"><img alt="NPM Version" src="https://img.shields.io/npm/v/weakref.svg?style=flat-square&logo=npm" /></a>
   <a href="https://npmcharts.com/compare/weakref?minimal=true"><img alt="Downloads" src="https://img.shields.io/npm/dt/weakref.svg?style=flat-square" /></a>
 </p>
