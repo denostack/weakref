@@ -31,11 +31,28 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
   }
 
   get(key: K): V | undefined {
-    return this.#map.get(key)?.deref();
+    const ref = this.#map.get(key);
+    if (!ref) return undefined;
+    const value = ref.deref();
+    if (value === undefined) {
+      this.#map.delete(key);
+      this.#registry.unregister(ref);
+      return undefined;
+    }
+    return value;
   }
 
   has(key: K): boolean {
-    return this.#map.has(key);
+    if (!this.#map.has(key)) {
+      return false;
+    }
+    const ref = this.#map.get(key)!;
+    if (ref.deref() === undefined) {
+      this.#map.delete(key);
+      this.#registry.unregister(ref);
+      return false;
+    }
+    return true;
   }
 
   set(key: K, value: V): this {
@@ -63,7 +80,13 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
 
   *[Symbol.iterator](): MapIterator<[K, V]> {
     for (const [key, ref] of this.#map) {
-      yield [key, ref.deref()!];
+      const value = ref.deref();
+      if (value === undefined) {
+        this.#map.delete(key);
+        this.#registry.unregister(ref);
+      } else {
+        yield [key, value];
+      }
     }
   }
 
@@ -71,13 +94,15 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
     return this[Symbol.iterator]();
   }
 
-  keys(): MapIterator<K> {
-    return this.#map.keys();
+  *keys(): MapIterator<K> {
+    for (const [key] of this) {
+      yield key;
+    }
   }
 
   *values(): MapIterator<V> {
-    for (const ref of this.#map.values()) {
-      yield ref.deref()!;
+    for (const [, value] of this) {
+      yield value;
     }
   }
 }

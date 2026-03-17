@@ -200,3 +200,32 @@ Deno.test("IterableWeakMap, garbage collect", async () => {
   assertEquals(insertedCount - removedCount, map.size);
   assertEquals([...map].length, map.size);
 });
+
+Deno.test("IterableWeakMap, accessors return clean state before FinalizationRegistry fires", async () => {
+  function nextJob() {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+  }
+
+  const map = new IterableWeakMap();
+
+  map.set({}, "value");
+
+  await nextJob();
+
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any).gc();
+
+  // size may still be 1 (FinalizationRegistry hasn't fired yet)
+  assertEquals(map.size, 1);
+
+  // but iterators should skip GC'd entries
+  assertEquals([...map.values()], []);
+  assertEquals([...map.keys()], []);
+  assertEquals([...map.entries()], []);
+  assertEquals([...map], []);
+
+  await nextJob();
+
+  // after FinalizationRegistry fires, size should be 0
+  assertEquals(map.size, 0);
+});

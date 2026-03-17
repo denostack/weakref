@@ -159,9 +159,15 @@ console.log(map.size); // output: 0
 ```
 
 > [!TIP]
-> WeakValueMap relies on the host's `FinalizationRegistry`, so `size`/`has`
-> shrink as soon as the GC notifies the registry. There can be a short delay
-> between the object being collected and the entry disappearing.
+> Methods like `get()`, `has()`, and iterators (`entries()`, `keys()`,
+> `values()`, `forEach()`, `for...of`) check the underlying `WeakRef` on access
+> and automatically skip (or clean up) entries whose values have already been
+> garbage-collected.
+>
+> However, the `size` property reflects the internal map's count and may
+> temporarily include stale entries until the `FinalizationRegistry` callback
+> runs. If you need an exact count of live entries, use
+> `[...map.values()].length` instead.
 
 ## See Also
 

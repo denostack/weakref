@@ -77,13 +77,18 @@ export class IterableWeakSet<T extends object> implements
 
   *[Symbol.iterator](): SetIterator<T> {
     for (const ref of this.#set) {
-      yield ref.deref()!;
+      const value = ref.deref();
+      if (value === undefined) {
+        this.#set.delete(ref);
+        this.#registry.unregister(ref);
+      } else {
+        yield value;
+      }
     }
   }
 
   *entries(): SetIterator<[T, T]> {
-    for (const ref of this.#set) {
-      const value = ref.deref()!;
+    for (const value of this) {
       yield [value, value];
     }
   }

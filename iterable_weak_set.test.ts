@@ -180,3 +180,32 @@ Deno.test("IterableWeakSet, garbage collect", async () => {
   assertEquals(insertedCount - removedCount, set.size);
   assertEquals([...set].length, set.size);
 });
+
+Deno.test("IterableWeakSet, accessors return clean state before FinalizationRegistry fires", async () => {
+  function nextJob() {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+  }
+
+  const set = new IterableWeakSet();
+
+  set.add({});
+
+  await nextJob();
+
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any).gc();
+
+  // size may still be 1 (FinalizationRegistry hasn't fired yet)
+  assertEquals(set.size, 1);
+
+  // but iterators should skip GC'd entries
+  assertEquals([...set.values()], []);
+  assertEquals([...set.keys()], []);
+  assertEquals([...set.entries()], []);
+  assertEquals([...set], []);
+
+  await nextJob();
+
+  // after FinalizationRegistry fires, size should be 0
+  assertEquals(set.size, 0);
+});

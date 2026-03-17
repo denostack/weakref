@@ -207,3 +207,31 @@ Deno.test("WeakValueMap, overwrite existing key (#1)", async () => {
   assertEquals(map.get(42), x); // FAILS
   assertEquals(map.size, 1); // FAILS
 });
+
+Deno.test("WeakValueMap, accessors return clean state before FinalizationRegistry fires (#2)", async () => {
+  function nextJob() {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+  }
+
+  const map = new WeakValueMap();
+
+  map.set(42, {});
+
+  await nextJob();
+
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any).gc();
+
+  assertEquals(map.size, 1);
+
+  assertEquals(map.get(42), undefined);
+  assertFalse(map.has(42));
+  assertEquals([...map.values()], []);
+  assertEquals([...map.keys()], []);
+  assertEquals([...map.entries()], []);
+  assertEquals([...map], []);
+
+  await nextJob();
+
+  assertEquals(map.size, 0);
+});
