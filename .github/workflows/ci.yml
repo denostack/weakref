@@ -20,7 +20,7 @@ jobs:
       - name: Lint
         run: deno lint
       - name: Unit Test
-        run: deno test --coverage=coverage
+        run: deno test --v8-flags=--expose-gc --coverage=coverage
       - name: Create coverage report
         run: deno coverage ./coverage --lcov > coverage.lcov
       - name: Collect coverage
