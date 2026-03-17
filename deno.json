@@ -5,7 +5,7 @@
     "test": "deno task test:unit && deno task test:lint && deno task test:format && deno task test:types",
     "test:format": "deno fmt --check",
     "test:lint": "deno lint",
-    "test:unit": "deno test",
+    "test:unit": "deno test --v8-flags=--expose-gc",
     "test:types": "find . -name '*.ts' -not -path './.npm/*' | xargs deno check",
     "build:npm": "deno run --allow-env --allow-read --allow-write --allow-run scripts/build_npm.ts"
   },

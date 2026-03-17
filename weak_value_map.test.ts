@@ -176,8 +176,34 @@ Deno.test("WeakValueMap, garbage collect", async () => {
     map.set(i, data);
     register.register(data, i);
     insertedCount++;
+    // deno-lint-ignore no-explicit-any
+    (globalThis as any).gc();
   }
 
   assertEquals(insertedCount - removedCount, map.size);
   assertEquals([...map].length, map.size);
+});
+
+Deno.test("WeakValueMap, overwrite existing key (#1)", async () => {
+  function nextJob() {
+    return new Promise((resolve) => setTimeout(resolve, 0));
+  }
+
+  const map = new WeakValueMap();
+
+  map.set(42, {});
+
+  const x = {};
+
+  map.set(42, x);
+
+  await nextJob();
+
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any).gc();
+
+  await nextJob();
+
+  assertEquals(map.get(42), x); // FAILS
+  assertEquals(map.size, 1); // FAILS
 });

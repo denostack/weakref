@@ -39,6 +39,9 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
   }
 
   set(key: K, value: V): this {
+    if (this.#map.has(key)) {
+      this.delete(key);
+    }
     const ref = new WeakRef(value);
     this.#map.set(key, ref);
     this.#registry.register(value, key, ref);

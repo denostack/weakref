@@ -173,6 +173,8 @@ Deno.test("IterableWeakSet, garbage collect", async () => {
     set.add(data);
     register.register(data, i);
     insertedCount++;
+    // deno-lint-ignore no-explicit-any
+    (globalThis as any).gc();
   }
 
   assertEquals(insertedCount - removedCount, set.size);

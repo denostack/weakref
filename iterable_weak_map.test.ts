@@ -193,6 +193,8 @@ Deno.test("IterableWeakMap, garbage collect", async () => {
     map.set(data, i);
     register.register(data, i);
     insertedCount++;
+    // deno-lint-ignore no-explicit-any
+    (globalThis as any).gc();
   }
 
   assertEquals(insertedCount - removedCount, map.size);
