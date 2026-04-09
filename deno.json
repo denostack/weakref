@@ -28,13 +28,16 @@
   "fmt": {
     "exclude": [
       ".npm"
-    ]
+    ],
+    "lineWidth": 120
   },
   "publish": {
     "exclude": [
+      ".npm",
       ".github",
       ".vscode",
       "scripts",
+      "examples",
       "**/*.test.ts"
     ]
   }

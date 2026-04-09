@@ -1,7 +1,6 @@
 import { IterableWeakSet } from "./iterable_weak_set.ts";
 
-export class IterableWeakMap<K extends object, V>
-  implements WeakMap<K, V>, Map<K, V> {
+export class IterableWeakMap<K extends object, V> implements WeakMap<K, V>, Map<K, V> {
   #weakMap = new WeakMap<K, V>();
   #set = new IterableWeakSet<K>();
 

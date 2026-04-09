@@ -11,9 +11,8 @@
   <a href="https://npmcharts.com/compare/weakref?minimal=true"><img alt="Downloads" src="https://img.shields.io/npm/dt/weakref.svg?style=flat-square" /></a>
 </p>
 
-This library provides three iterable weak data structures for JavaScript,
-IterableWeakSet, IterableWeakMap, and WeakValueMap. They keep only weak
-references to their keys or values, so entries disappear automatically once the
+This library provides three iterable weak data structures for JavaScript, IterableWeakSet, IterableWeakMap, and
+WeakValueMap. They keep only weak references to their keys or values, so entries disappear automatically once the
 referenced objects are garbage collected instead of blocking GC.
 
 ## Usage
@@ -21,11 +20,7 @@ referenced objects are garbage collected instead of blocking GC.
 ### with Deno
 
 ```ts
-import {
-  IterableWeakMap,
-  IterableWeakSet,
-  WeakValueMap,
-} from "@denostack/weakref";
+import { IterableWeakMap, IterableWeakSet, WeakValueMap } from "@denostack/weakref";
 
 const set = new IterableWeakSet();
 const map = new IterableWeakMap();
@@ -46,19 +41,17 @@ import { IterableWeakMap, IterableWeakSet, WeakValueMap } from "weakref";
 ```
 
 > [!NOTE]
-> Examples below call `globalThis.gc?.()` only to symbolize “a GC cycle just
-> finished”. Manual GC is available only when the runtime exposes it (e.g.
-> Node.js started with `--expose-gc`); otherwise entries disappear the next time
-> the runtime notifies the `FinalizationRegistry`.
+> Examples below call `globalThis.gc?.()` only to symbolize “a GC cycle just finished”. Manual GC is available only when
+> the runtime exposes it (e.g. Node.js started with `--expose-gc`); otherwise entries disappear the next time the
+> runtime notifies the `FinalizationRegistry`.
 
 ## Features
 
 ### IterableWeakSet
 
-IterableWeakSet implements the semantics of both WeakSet (weak keys) and Set
-(iteration helpers) so you can keep a deduplicated collection of objects without
-preventing them from being garbage collected. Once an object is collected, the
-entry is removed automatically.
+IterableWeakSet implements the semantics of both WeakSet (weak keys) and Set (iteration helpers) so you can keep a
+deduplicated collection of objects without preventing them from being garbage collected. Once an object is collected,
+the entry is removed automatically.
 
 **Interface**
 
@@ -90,9 +83,8 @@ console.log(set.size); // output: 0
 
 ### IterableWeakMap
 
-IterableWeakMap combines a WeakMap with iterable Map helpers so you can inspect
-entries without blocking GC. Keys are weakly referenced and disappear once they
-are no longer referenced elsewhere.
+IterableWeakMap combines a WeakMap with iterable Map helpers so you can inspect entries without blocking GC. Keys are
+weakly referenced and disappear once they are no longer referenced elsewhere.
 
 **Interface**
 
@@ -125,9 +117,8 @@ console.log(map.size); // output: 0
 
 ### WeakValueMap
 
-WeakValueMap is a class that allows you to create a map of non-object keys with
-weak references to object values. It is useful when primitive identifiers are
-used to look up objects that should be collected when no longer referenced
+WeakValueMap is a class that allows you to create a map of non-object keys with weak references to object values. It is
+useful when primitive identifiers are used to look up objects that should be collected when no longer referenced
 elsewhere.
 
 **Interface**
@@ -159,20 +150,17 @@ console.log(map.size); // output: 0
 ```
 
 > [!TIP]
-> Methods like `get()`, `has()`, and iterators (`entries()`, `keys()`,
-> `values()`, `forEach()`, `for...of`) check the underlying `WeakRef` on access
-> and automatically skip (or clean up) entries whose values have already been
+> Methods like `get()`, `has()`, and iterators (`entries()`, `keys()`, `values()`, `forEach()`, `for...of`) check the
+> underlying `WeakRef` on access and automatically skip (or clean up) entries whose values have already been
 > garbage-collected.
 >
-> However, the `size` property reflects the internal map's count and may
-> temporarily include stale entries until the `FinalizationRegistry` callback
-> runs. If you need an exact count of live entries, use
-> `[...map.values()].length` instead.
+> However, the `size` property reflects the internal map's count and may temporarily include stale entries until the
+> `FinalizationRegistry` callback runs. If you need an exact count of live entries, use `[...map.values()].length`
+> instead.
 
 ## See Also
 
-- [Python weakref](https://docs.python.org/3/library/weakref.html) inspired this
-  project.
+- [Python weakref](https://docs.python.org/3/library/weakref.html) inspired this project.
 - [MDN - JS WeakMap](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
 - [MDN - JS WeakSet](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet)
 - [MDN - JS WeakRef](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef)
