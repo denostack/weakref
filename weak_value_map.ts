@@ -65,6 +65,21 @@ export class WeakValueMap<K, V extends object> implements Map<K, V> {
     return this;
   }
 
+  getOrInsert(key: K, defaultValue: V): V {
+    const existing = this.get(key);
+    if (existing !== undefined) return existing;
+    this.set(key, defaultValue);
+    return defaultValue;
+  }
+
+  getOrInsertComputed(key: K, callbackfn: (key: K) => V): V {
+    const existing = this.get(key);
+    if (existing !== undefined) return existing;
+    const value = callbackfn(key);
+    this.set(key, value);
+    return value;
+  }
+
   get [Symbol.toStringTag](): string {
     return "WeakValueMap";
   }
