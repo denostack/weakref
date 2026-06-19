@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertFalse } from "@std/assert";
+import { assert, assertEquals, assertFalse, assertInstanceOf } from "@std/assert";
 import { WeakValueMap } from "./weak_value_map.ts";
 
 function* iterate<T>(items: T[]): IterableIterator<T> {
@@ -234,4 +234,15 @@ Deno.test("WeakValueMap, accessors return clean state before FinalizationRegistr
   await nextJob();
 
   assertEquals(map.size, 0);
+});
+
+Deno.test("WeakValueMap, set with non-GCable value preserves existing entry (#3)", () => {
+  const x = {};
+  const map = new WeakValueMap([[42, x]]);
+  try {
+    map.set(42, 42);
+  } catch (e) {
+    assertInstanceOf(e, TypeError);
+  }
+  assertEquals(map.get(42), x); // currently fails
 });
